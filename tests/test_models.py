@@ -1,8 +1,11 @@
 """Tests for statistics functions within the Model layer."""
+import math
 
 import numpy as np
 import numpy.testing as npt
-
+import math
+from unittest.mock import Mock
+from inflammation.compute_data import analyse_data
 
 def test_daily_mean_zeros():
     """Test that mean function works for an array of zeros."""
@@ -29,3 +32,9 @@ def test_daily_mean_integers():
     # Need to use Numpy testing functions to compare arrays
     npt.assert_array_equal(daily_mean(test_input), test_result)
 
+def test_compute_data_mock_source():
+    data_source = Mock()
+    data_source.load_inflammation_data.return_value =[[0,2,0],[0,1,0]]
+
+    result = analyse_data(data_source)
+    npt.assert_array_almost_equal(result,[0,math.sqrt(0.25),0])
